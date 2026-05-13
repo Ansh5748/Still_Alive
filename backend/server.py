@@ -120,7 +120,13 @@ async def auth_google(payload: dict, response: Response):
 
 @api.post("/auth/logout")
 async def logout(response: Response):
-    response.delete_cookie("access_token", path="/")
+    # In production with cross-site cookies (Render), we must match the attributes used to set the cookie
+    response.delete_cookie(
+        "access_token", 
+        path="/", 
+        samesite="none", 
+        secure=True
+    )
     return {"ok": True}
 
 
